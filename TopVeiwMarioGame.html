@@ -1,0 +1,158 @@
+<!doctype html>
+
+<body>
+    <canvas id="gameCanvas" width="1200" height="800"></canvas>
+
+    <script>
+        var canvas, canvasContext;
+
+        window.onload = function() {
+            canvas = document.getElementById('gameCanvas');
+            canvasContext = canvas.getContext('2d');
+
+            document.addEventListener('keydown', keyPressed);
+            document.addEventListener('keyup', keyReleased);
+
+            setInterval(mainloop, 1000 / 50);
+        }
+        
+        var playerXpos = 0;
+        var playerYpos = 0;
+        var playerXspeed = 20;
+        var playerYspeed = 20;
+        const PLAYER_SISE = 20;
+        var pStartPos = true;
+        
+        var cherryXpos = 0;
+        var cherryYpos = 0;
+        const CHERRY_SISE = 15;
+        
+        var gameRun = true;
+        
+        function mainloop() {
+            if (gameRun) {
+            
+                playerMove();
+             
+
+                colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
+                colorRect(playerXpos, playerYpos, PLAYER_SISE, PLAYER_SISE, 'green'); // player
+                colorRect(cherryXpos, cherryYpos, CHERRY_SISE, CHERRY_SISE, 'red')
+                
+                if(pStartPos){
+                    pStartPos = false;
+                    PlayerStartPos();
+                }
+            }
+        }
+
+        var leftKeyPressed = false;
+        var rightKeyPressed = false;
+        var upKeyPressed = false;
+        var downKeyPressed = false;
+        
+        const LEFT_KEY = 37;
+        const RIGHT_KEY = 39;
+        const UP_KEY = 38;
+        const DOWN_KEY = 40;
+
+        function keyPressed(evt) {
+            if (evt.keyCode == LEFT_KEY) {
+                leftKeyPressed = true;
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKeyPressed = true;
+            }
+            if (evt.keyCode == UP_KEY) {
+                upKeyPressed = true;
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKeyPressed = true;
+            }
+        }
+
+        function keyReleased(evt) {
+            
+            if (evt.keyCode == LEFT_KEY) {
+                leftKeyPressed = false;
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKeyPressed = false;
+            }
+            if (evt.keyCode == UP_KEY) {
+                upKeyPressed = false;
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKeyPressed = false;
+            }
+        }
+        
+        function PlayerStartPos() { //shooter starting pos
+                    playerXpos = canvas.width / 2 - PLAYER_SISE / 2;
+                    playerYpos = canvas.height - canvas.height - PLAYER_SISE + 10;
+            }
+        
+        function playerMove() {
+            
+            if(leftKeyPressed && playerXpos > 0) {
+                playerXpos -= playerXspeed;
+            } 
+            
+            if(rightKeyPressed && playerXpos < canvas.width - PLAYER_SISE) {
+                playerXpos += playerXspeed;
+            } 
+            
+            if(upKeyPressed && playerYpos > 0) {
+                playerYpos -= playerYspeed;
+            } 
+            
+            if(downKeyPressed && playerYpos < canvas.height - PLAYER_SISE) {
+                playerYpos += playerYspeed;
+            } 
+        }
+        
+        function colorRect(x, y, w, h, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(x, y, w, h);
+        }// end move func
+
+//        function drawImages(src, sx, sy, sw, sh, dx, dy, dw, dh) {
+//            canvasContext.drawImage(src, sx, sy, sw, sh, dx, dy, dw, dh);
+//        }
+        
+    </script>
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
