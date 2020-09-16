@@ -1,7 +1,7 @@
 <!doctype html>
 
 <body>
-    <canvas id="gameCanvas" width="1200" height="800"></canvas>
+    <canvas id="gameCanvas" width="900" height="900"></canvas>
 
     <script>
         var canvas, canvasContext;
@@ -15,34 +15,12 @@
 
             setInterval(mainloop, 1000 / 50);
         }
-        
-        var playerXpos = 0;
-        var playerYpos = 0;
-        var playerXspeed = 20;
-        var playerYspeed = 20;
-        const PLAYER_SISE = 20;
-        var pStartPos = true;
-        
-        var cherryXpos = 0;
-        var cherryYpos = 0;
-        const CHERRY_SISE = 15;
-        
+
         var gameRun = true;
-        
+
         function mainloop() {
             if (gameRun) {
-            
-                playerMove();
-             
-
-                colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-                colorRect(playerXpos, playerYpos, PLAYER_SISE, PLAYER_SISE, 'green'); // player
-                colorRect(cherryXpos, cherryYpos, CHERRY_SISE, CHERRY_SISE, 'red')
-                
-                if(pStartPos){
-                    pStartPos = false;
-                    PlayerStartPos();
-                }
+                renderBlockMap();
             }
         }
 
@@ -50,11 +28,84 @@
         var rightKeyPressed = false;
         var upKeyPressed = false;
         var downKeyPressed = false;
-        
+
         const LEFT_KEY = 37;
         const RIGHT_KEY = 39;
         const UP_KEY = 38;
         const DOWN_KEY = 40;
+
+        var gridCols = 30;
+        var gridRows = 30;
+
+        var gridMap = [
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1
+        ];
+        
+        var gridRowCount = 0;
+
+        gridMap.forEach(function(block, i, array) {
+            var size = 20;
+            
+            var xPos = i % gridCols * size;
+            var yPos = gridRowCount * size;
+            
+            if(i % gridCols == 0 && i != 0 ){ // end of row
+               gridRowCount++;
+            }
+            var value = 0;
+            var color = '';
+            if(block == 0 ){
+                value = 0;
+                color = 'black';
+            } else if (block == 1){
+                value = 1;
+                color = 'gray';
+            } else if (block == 2){
+                value = 2;
+                color = 'lime';
+            }
+            
+            var block = {
+                xPos : xPos,
+                yPos: yPos,
+                size: size,
+                color: color,
+                value: value
+            }
+            
+            gridMap.splice(i,1,block);
+        });
+
 
         function keyPressed(evt) {
             if (evt.keyCode == LEFT_KEY) {
@@ -72,7 +123,7 @@
         }
 
         function keyReleased(evt) {
-            
+
             if (evt.keyCode == LEFT_KEY) {
                 leftKeyPressed = false;
             }
@@ -86,73 +137,50 @@
                 downKeyPressed = false;
             }
         }
-        
+
+        function makeBlocks() {
+            var blockXpos = 0;
+            //            var value = ;  
+        }
+
         function PlayerStartPos() { //shooter starting pos
-                    playerXpos = canvas.width / 2 - PLAYER_SISE / 2;
-                    playerYpos = canvas.height - canvas.height - PLAYER_SISE + 10;
-            }
-        
+            playerXpos = canvas.width / 2 - PLAYER_SISE;
+            playerYpos = canvas.height - PLAYER_SISE;
+        }
+
         function playerMove() {
-            
-            if(leftKeyPressed && playerXpos > 0) {
+
+            if (leftKeyPressed && playerXpos > 0) {
                 playerXpos -= playerXspeed;
-            } 
-            
-            if(rightKeyPressed && playerXpos < canvas.width - PLAYER_SISE) {
+            }
+
+            if (rightKeyPressed && playerXpos < canvas.width - PLAYER_SISE) {
                 playerXpos += playerXspeed;
-            } 
-            
-            if(upKeyPressed && playerYpos > 0) {
+            }
+
+            if (upKeyPressed && playerYpos > 0) {
                 playerYpos -= playerYspeed;
-            } 
-            
-            if(downKeyPressed && playerYpos < canvas.height - PLAYER_SISE) {
+            }
+
+            if (downKeyPressed && playerYpos < canvas.height - PLAYER_SISE) {
                 playerYpos += playerYspeed;
-            } 
+            }
         }
         
+        function renderBlockMap(){
+            gridMap.forEach(function(block, i, array){
+                colorRect(block.xPos, block.yPos, block.size, block.size, block.color);
+            });
+        }
+
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
-        }// end move func
+        } // end move func
 
-//        function drawImages(src, sx, sy, sw, sh, dx, dy, dw, dh) {
-//            canvasContext.drawImage(src, sx, sy, sw, sh, dx, dy, dw, dh);
-//        }
-        
+        //        function drawImages(src, sx, sy, sw, sh, dx, dy, dw, dh) {
+        //            canvasContext.drawImage(src, sx, sy, sw, sh, dx, dy, dw, dh);
+        //        }
+
     </script>
 </body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
