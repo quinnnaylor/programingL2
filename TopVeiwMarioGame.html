@@ -21,6 +21,8 @@
         function mainloop() {
             if (gameRun) {
                 renderBlockMap();
+                findplayer();
+                playerMove();
             }
         }
 
@@ -84,16 +86,20 @@
             }
             var value = 0;
             var color = '';
+            var playerPos = 3;
             if(block == 0 ){
                 value = 0;
-                color = 'black';
+                color = 'black';// floor
             } else if (block == 1){
                 value = 1;
-                color = 'gray';
+                color = 'gray';// broder/wall
             } else if (block == 2){
                 value = 2;
-                color = 'lime';
-            }
+                color = 'lime';// door
+            } else if (block == 3){
+                value = 3;
+                color = 'red';// player
+            } 
             
             var block = {
                 xPos : xPos,
@@ -105,6 +111,16 @@
             
             gridMap.splice(i,1,block);
         });
+        
+        var playerLoc = 0;
+        function findplayer(){
+            
+        gridMap.forEach(function (square,i,array) {
+            if (square.value == 3){
+                    playerLoc = i;     
+            }
+            });
+        }
 
 
         function keyPressed(evt) {
@@ -139,34 +155,21 @@
         }
 
         function makeBlocks() {
-            var blockXpos = 0;
-            //            var value = ;  
-        }
-
-        function PlayerStartPos() { //shooter starting pos
-            playerXpos = canvas.width / 2 - PLAYER_SISE;
-            playerYpos = canvas.height - PLAYER_SISE;
+            var blockXpos = 0;  
         }
 
         function playerMove() {
-
-            if (leftKeyPressed && playerXpos > 0) {
-                playerXpos -= playerXspeed;
-            }
-
-            if (rightKeyPressed && playerXpos < canvas.width - PLAYER_SISE) {
-                playerXpos += playerXspeed;
-            }
-
-            if (upKeyPressed && playerYpos > 0) {
-                playerYpos -= playerYspeed;
-            }
-
-            if (downKeyPressed && playerYpos < canvas.height - PLAYER_SISE) {
-                playerYpos += playerYspeed;
+            var nextBlockLeft = playerLoc - 1;
+            //console.log(gridMap[nextBlockLeft].value);
+            if (leftKeyPressed && gridMap[nextBlockLeft].value == 0){
+                gridMap[nextBlockLeft].value = 3;
+                gridMap[nextBlockLeft].color = 'red';
+                
+                gridMap[playerLoc].value = 0;
+                gridMap[playerLoc].color = 'black';
             }
         }
-        
+
         function renderBlockMap(){
             gridMap.forEach(function(block, i, array){
                 colorRect(block.xPos, block.yPos, block.size, block.size, block.color);
