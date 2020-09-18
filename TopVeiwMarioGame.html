@@ -13,7 +13,7 @@
             document.addEventListener('keydown', keyPressed);
             document.addEventListener('keyup', keyReleased);
 
-            setInterval(mainloop, 1000 / 50);
+            setInterval(mainloop, 1000 / 20);
         }
 
         var gameRun = true;
@@ -136,6 +136,7 @@
             if (evt.keyCode == DOWN_KEY) {
                 downKeyPressed = true;
             }
+            
         }
 
         function keyReleased(evt) {
@@ -152,7 +153,20 @@
             if (evt.keyCode == DOWN_KEY) {
                 downKeyPressed = false;
             }
+//            if (evt.keyCode == UP_KEY && evt.keyCode == RIGHT_KEY){
+//                console.log('yes');
+//                upKeyPressed = false;
+//                rightKeyPressed = false;
+//                }
         }
+        
+//        function diagonalMovement(evt) {
+//            console.log('yes');
+//            if (evt.keyCode == UP_KEY && evt.keyCode == RIGHT_KEY){
+//                upKeyPressed = false;
+//                rightKeyPressed = false;
+//                }
+//        }
 
         function makeBlocks() {
             var blockXpos = 0;  
@@ -164,6 +178,33 @@
             if (leftKeyPressed && gridMap[nextBlockLeft].value == 0){
                 gridMap[nextBlockLeft].value = 3;
                 gridMap[nextBlockLeft].color = 'red';
+                
+                gridMap[playerLoc].value = 0;
+                gridMap[playerLoc].color = 'black';
+            }
+            
+            var nextBlockRight = playerLoc + 1;
+            if (rightKeyPressed && gridMap[nextBlockRight].value == 0){
+                gridMap[nextBlockRight].value = 3;
+                gridMap[nextBlockRight].color = 'red';
+                
+                gridMap[playerLoc].value = 0;
+                gridMap[playerLoc].color = 'black';
+            }
+            
+            var nextBlockDown = playerLoc + 30;
+            if (downKeyPressed && gridMap[nextBlockDown].value == 0){
+                gridMap[nextBlockDown].value = 3;
+                gridMap[nextBlockDown].color = 'red';
+                
+                gridMap[playerLoc].value = 0;
+                gridMap[playerLoc].color = 'black';
+            }
+            
+            var nextBlockUp = playerLoc - 30;
+            if (upKeyPressed && gridMap[nextBlockUp].value == 0){
+                gridMap[nextBlockUp].value = 3;
+                gridMap[nextBlockUp].color = 'red';
                 
                 gridMap[playerLoc].value = 0;
                 gridMap[playerLoc].color = 'black';
