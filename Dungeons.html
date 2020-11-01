@@ -3,16 +3,6 @@
 
 <head>
     <title>dungeons</title>
-</head>
-
-<body>
-    <img src="images/roomone.jpg" id="roomOneBG">
-    <canvas id="gameCanvas" width="600" height="620"></canvas>
-    <img id="background" src='images/background.jpg'>
-    <section>
-        <img id="startButton" src="images/startButton.png" onclick="show()">
-    </section>
-
     <style>
         html {
             background-color: black;
@@ -23,6 +13,12 @@
             grid-column: 1/1;
             width: 100%;
             place-self: center;
+        }
+        
+        .roomOneBG {
+            height: 700px;
+            width: 100vw;
+            display: inherit;
         }
 
         #startButton {
@@ -62,6 +58,16 @@
         }
 
     </style>
+</head>
+
+<body>
+    <img alt="" src="images/roomone.jpg" id="roomOneBG">
+    <canvas id="gameCanvas" width="580" height="620"></canvas>
+    <img alt="" id="background" src='images/background.jpg'>
+    <section>
+        <img alt="" id="startButton" src="images/startButton.png" onclick="show()">
+    </section>
+
 
     <script>
         var canvas, canvasContext;
@@ -84,7 +90,7 @@
             document.getElementById('gameCanvas').style.display = 'block';
             document.getElementById('startButton').style.display = 'none';
             document.getElementById('background').style.display = 'none';
-            document.getElementById('roomOneBG').style.display = 'block';
+            document.getElementById('roomOneBG').style.display = 'flex';
         }
 
         function mainloop() {
@@ -105,12 +111,26 @@
                 findEnemy2();
                 enemy1Move();
                 enemy2Move();
-            }
-            colorText('Silver Keys:' + silverKeys, 25, 617, '20px Arial', 'white')
+            colorText('Sliver Keys:' + silverKeys, 25, 617, '20px Arial', 'white')
             colorText('Gold Keys:' + goldKeys, 465, 617, '20px Arial', 'white')
+            }
         }
         
-//       1
+        var difficulty = '';
+        var pass = false;
+        while (pass == false) {
+            difficulty = prompt('how hard do you want the game?', 'hard or easy?')
+
+            if (difficulty.toLowerCase() == 'easy' || difficulty.toLowerCase() == 'hard') {
+                pass = true;
+            }
+        }
+
+        if (difficulty == 'easy') {
+            setInterval(mainloop, 1000 / 2);
+        } else {
+            setInterval(mainloop, 1000 / 10);
+        } //end of game dificulty code
 
         var bg = new Image();
         bg.src = 'images/background.jpg';
@@ -435,7 +455,7 @@
                 gridMap[playerLoc].value = 0;
                 gridMap[playerLoc].color = 'black';
 
-                silverKeys++;
+                silverKeys ++;
             }
 
             if (gridMap[nextBlock].value == 2 && silverKeys > 0) {
@@ -445,7 +465,7 @@
                 gridMap[playerLoc].value = 0;
                 gridMap[playerLoc].color = 'black';
 
-                silverKeys--;
+                silverKeys --;
             }
 
             if (gridMap[nextBlock].value == 8) {
@@ -672,7 +692,6 @@
             if (directionEnemy1 == 'right' && gridMap[enemy1NextBlock].value == 0) {
                 enemy1NextBlock = enemyLoc1 + 1;
                 enemy1MoveRedraw();
-                console.log('hello')
             }
             if (gridMap[enemy1NextBlock].value == 1 && directionEnemy1 == 'right') {
                 enemy1NextBlock = enemyLoc1 - 1;
@@ -700,7 +719,6 @@
             if (directionEnemy2 == 'left' && gridMap[enemy2NextBlock].value == 0) {
                 enemy2NextBlock = enemyLoc2 - 1;
                 enemy2MoveRedraw();
-                console.log('hello')
             }
             if (gridMap[enemy2NextBlock].value == 1 && directionEnemy2 == 'left') {
                 enemy2NextBlock = enemyLoc2 + 1;
@@ -735,9 +753,9 @@
         }
 
         function colorText(msg, x, y, f, c) {
-            canvasContext.font = f; // '20px Arial
-            canvasContext.fillText(msg, x, y);
             canvasContext.fillStyle = c;
+            canvasContext.fillText(msg, x, y);
+            canvasContext.font = f; // '20px Arial
         } //end of color text func
 
     </script>
