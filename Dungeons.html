@@ -15,15 +15,32 @@
             place-self: center;
         }
         
-        .roomOneBG {
-            height: 700px;
-            width: 100vw;
-            display: inherit;
+        #roomOneBG {
+            height: fill;
+            width: fill;
+            display: none;
         }
 
         #startButton {
             width: 30%;
             margin-right: 50px;
+        }
+        
+        #deathScreen {
+            width: fill;
+            height: fill;
+            display: none;
+        }
+        
+        #menuButton {
+            width: 30%;
+            margin-right: 50px;
+            display: none;
+        }
+        
+        #youWon {
+            width: 80%;
+            display: none;
         }
 
         canvas {
@@ -61,11 +78,14 @@
 </head>
 
 <body>
-    <img alt="" src="images/roomone.jpg" id="roomOneBG">
     <canvas id="gameCanvas" width="580" height="620"></canvas>
+    <img alt="" id="roomOneBG" src="images/roomone.jpg">
     <img alt="" id="background" src='images/background.jpg'>
-    <section>
+    <img alt="" id="deathScreen" src="images/deathScreen.png">
+    <img alt="" id="youWon" src="images/youWon.jpg">
+     <section>
         <img alt="" id="startButton" src="images/startButton.png" onclick="show()">
+        <img alt="" id="menuButton" src="images/menuButton.png" onclick="backMenu()"> 
     </section>
 
 
@@ -81,7 +101,7 @@
 
             setInterval(mainloop, 1000 / 10);
         }
-
+        
         var gameRun = false;
         var settingUp = true;
 
@@ -91,7 +111,48 @@
             document.getElementById('startButton').style.display = 'none';
             document.getElementById('background').style.display = 'none';
             document.getElementById('roomOneBG').style.display = 'flex';
-        }
+            document.getElementById('deathScreen').style.display = 'none';
+            document.getElementById('menuButton').style.display = 'none';
+            document.getElementById('youWon').style.display = 'none';
+            gridMap = gridMap1;
+        } // start
+        
+        function backMenu() {
+            location.reload();
+//            document.getElementById('menuButton').style.display = 'none';
+//            document.getElementById('gameCanvas').style.display = 'none';
+//            document.getElementById('startButton').style.display = 'block';
+//            document.getElementById('background').style.display = 'block';
+//            document.getElementById('roomOneBG').style.display = 'none';
+//            document.getElementById('deathScreen').style.display = 'none';
+//            document.getElementById('youWon').style.display = 'none';
+//            gridMapNum();
+//            lives = 3;
+        }// if you hit the menu
+        
+        function deathScreen() {
+            if (lives < 1) {
+                document.getElementById('gameCanvas').style.display = 'none';
+                document.getElementById('startButton').style.display = 'none';
+                document.getElementById('background').style.display = 'none';
+                document.getElementById('roomOneBG').style.display = 'none';
+                document.getElementById('menuButton').style.display = 'block';
+                document.getElementById('deathScreen').style.display = 'block';
+                document.getElementById('youWon').style.display = 'none';
+                gameRun = false;
+                }
+        }//if lives are lower than 1
+        
+        function showMenu() {
+            document.getElementById('gameCanvas').style.display = 'none';
+            document.getElementById('startButton').style.display = 'none';
+            document.getElementById('background').style.display = 'none';
+            document.getElementById('roomOneBG').style.display = 'none';
+            document.getElementById('menuButton').style.display = 'block';
+            document.getElementById('deathScreen').style.display = 'none';
+            document.getElementById('youWon').style.display = 'block';
+        } 
+        
 
         function mainloop() {
             if (settingUp) {
@@ -101,8 +162,8 @@
 
             if (gameRun) {
 
-
                 renderBlockMap();
+                deathScreen();
 
                 findplayer();
                 playerMove();
@@ -113,6 +174,8 @@
                 enemy2Move();
             colorText('Sliver Keys:' + silverKeys, 25, 617, '20px Arial', 'white')
             colorText('Gold Keys:' + goldKeys, 465, 617, '20px Arial', 'white')
+            colorText('lives:' + lives, 25, 18, '20px Arial', 'white')
+            colorText('Name:' + username, 465, 18, '20px Arial', 'white')
             }
         }
         
@@ -131,6 +194,11 @@
         } else {
             setInterval(mainloop, 1000 / 10);
         } //end of game dificulty code
+        
+        var username = '';
+        while (username == '' || username == 'null') {
+            username = prompt('whats your name?') || ''; // your name please        } // end of username code
+        }
 
         var bg = new Image();
         bg.src = 'images/background.jpg';
@@ -151,9 +219,9 @@
         var gridMap = [];
         var gridMap1 = [
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -165,7 +233,7 @@
             1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 9, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 0,10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 6, 0, 1, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 1,
+            1,10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 6, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1,
             1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1,
@@ -177,7 +245,7 @@
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 8, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
@@ -219,25 +287,25 @@
 
         var gridMap3 = [
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1,
-            1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1,
-            1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,10, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -253,9 +321,9 @@
 
         var gridMap4 = [
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -544,7 +612,7 @@
                 goldKeys = 0;
 
                 settingUp = true;
-                console.log('ayyy')
+//                console.log('ayyy')
             }
 
             if (gridMap[nextBlock].value == 7) {
@@ -607,7 +675,9 @@
                 goldKeys = 0;
 
                 settingUp = true;
-                console.log('ayyy')
+                
+                showMenu();
+                
             }
 
 
@@ -641,6 +711,8 @@
             }
 
         }
+        
+        var lives = 3;
 
         var enemy1NextBlock = 0;
 
@@ -654,9 +726,17 @@
             }
             
             if (gridMap[enemy1NextBlock].value == 3) {
-                gameRun = false
-                collision();
-                }
+                gridMap[enemy1NextBlock].value = 5;
+                gridMap[enemy1NextBlock].color = 'purple';
+
+                gridMap[enemyLoc1].value = 0;
+                gridMap[enemyLoc1].color = 'black';
+                
+                playerLoc = 304;
+                gridMap[playerLoc].value = 3;
+                gridMap[playerLoc].color = 'red';
+                lives --;
+            }
         }
         
         
@@ -672,24 +752,29 @@
             }
             
             if (gridMap[enemy2NextBlock].value == 3) {
-                gameRun = false;
-                collision();
-                }
+                gridMap[enemy2NextBlock].value = 10;
+                gridMap[enemy2NextBlock].color = 'purple';
+
+                gridMap[enemyLoc2].value = 0;
+                gridMap[enemyLoc2].color = 'black';
+                
+                playerLoc = 304;
+                gridMap[playerLoc].value = 3;
+                gridMap[playerLoc].color = 'red';
+                console.log('yes');
+                lives --;
+            }
         }
 
-            function collision() {
-                gameRun = false;
-                document.getElementById('gameCanvas').style.display = 'none';
-                document.getElementById('roomOneBG').style.display = 'none';
-            }
+        
 
         var directionEnemy1 = 'right';
 
         function enemy1Move() {
 
             enemy1NextBlock = enemyLoc1 + 1;
-            console.log(gridMap[enemy1NextBlock].value)
-            if (directionEnemy1 == 'right' && gridMap[enemy1NextBlock].value == 0) {
+//            console.log(gridMap[enemy1NextBlock].value)
+            if (directionEnemy1 == 'right' && gridMap[enemy1NextBlock].value == 0 || gridMap[enemy1NextBlock].value == 3 ) {
                 enemy1NextBlock = enemyLoc1 + 1;
                 enemy1MoveRedraw();
             }
@@ -698,7 +783,7 @@
                 enemy1MoveRedraw();
                 directionEnemy1 = 'left';
             }
-            if (directionEnemy1 == 'left' && gridMap[enemy1NextBlock].value == 0) {
+            if (directionEnemy1 == 'left' && gridMap[enemy1NextBlock].value == 0 || gridMap[enemy1NextBlock].value == 3) {
                 enemy1NextBlock = enemyLoc1 - 1;
                 enemy1MoveRedraw();
             }
@@ -715,22 +800,22 @@
         function enemy2Move() {
 
             enemy2NextBlock = enemyLoc2 + 1;
-            console.log(gridMap[enemy2NextBlock].value)
-            if (directionEnemy2 == 'left' && gridMap[enemy2NextBlock].value == 0) {
-                enemy2NextBlock = enemyLoc2 - 1;
+//            console.log(gridMap[enemy2NextBlock].value)
+            if (directionEnemy2 == 'left' && gridMap[enemy2NextBlock].value == 0 || gridMap[enemy2NextBlock].value == 3) {
+                enemy2NextBlock = enemyLoc2 + 1;
                 enemy2MoveRedraw();
             }
             if (gridMap[enemy2NextBlock].value == 1 && directionEnemy2 == 'left') {
-                enemy2NextBlock = enemyLoc2 + 1;
+                enemy2NextBlock = enemyLoc2 - 1;
                 enemy2MoveRedraw();
                 directionEnemy2 = 'right';
             }
-            if (directionEnemy2 == 'right' && gridMap[enemy2NextBlock].value == 0) {
-                enemy2NextBlock = enemyLoc2 + 1;
+            if (directionEnemy2 == 'right' && gridMap[enemy2NextBlock].value == 0 || directionEnemy2 == 'right' && gridMap[enemy2NextBlock].value == 3) {
+                enemy2NextBlock = enemyLoc2 - 1;
                 enemy2MoveRedraw();
             }
             if (gridMap[enemy2NextBlock].value == 1 && directionEnemy2 == 'right') {
-                enemy2NextBlock = enemyLoc2 - 1;
+                enemy2NextBlock = enemyLoc2 + 1;
                 enemy2MoveRedraw();
                 directionEnemy2 = 'left';
             }
